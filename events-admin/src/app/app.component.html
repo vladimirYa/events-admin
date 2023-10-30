@@ -1,1 +1,51 @@
-admin
+<div [formGroup]="createEventForm" class="form">
+  <h1>Fill data to create event</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Event name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="description" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Banner url</mat-label>
+    <input matInput formControlName="image" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Organization name</mat-label>
+    <input matInput formControlName="org" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>City</mat-label>
+    <mat-select formControlName="City"></mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Address</mat-label>
+    <input matInput formControlName="place" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Link from google maps</mat-label>
+    <input matInput formControlName="googleMapsLink" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Event type</mat-label>
+    <mat-select formControlName="type">
+      <!-- <mat-option *ngFor="let type of config.formats.values"></mat-option> -->
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Price</mat-label>
+    <input matInput formControlName="price" />
+  </mat-form-field>
+
+  <div class="button-bar">
+    <button mat-flat-button color="primary">Add event</button>
+  </div>
+</div>
