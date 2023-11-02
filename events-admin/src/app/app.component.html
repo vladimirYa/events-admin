@@ -1,51 +1,288 @@
-<div [formGroup]="createEventForm" class="form">
-  <h1>Fill data to create event</h1>
-  <mat-form-field appearance="outline">
-    <mat-label>Event name</mat-label>
-    <input matInput formControlName="name" />
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Description</mat-label>
-    <input matInput formControlName="description" />
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Banner url</mat-label>
-    <input matInput formControlName="image" />
-  </mat-form-field>
+<button
+  mat-flat-button
+  class="org-trigger"
+  color="primary"
+  (click)="isShowOrgs = !isShowOrgs"
+>
+  Show Organizations
+</button>
+<div class="dashboard">
+  <div class="dashboard__left" *ngIf="isShowOrgs">
+    <div class="dashboard__header">
+      <h1>Create Organization</h1>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Organization name</mat-label>
-    <input matInput formControlName="org" />
-  </mat-form-field>
+    <div [formGroup]="orgForm" class="form form_org">
+      <mat-form-field appearance="outline">
+        <mat-label>Organization name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Contacts</mat-label>
+        <input matInput formControlName="contacts" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Link</mat-label>
+        <input matInput formControlName="link" />
+      </mat-form-field>
+      <div class="button-bar" style="padding-right: 40px">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!orgForm.valid"
+          (click)="createOrganization(orgForm.value)"
+        >
+          Create organization
+        </button>
+      </div>
+    </div>
+    <h3>Existing organizations</h3>
 
-  <mat-form-field appearance="outline">
-    <mat-label>City</mat-label>
-    <mat-select formControlName="City"></mat-select>
-  </mat-form-field>
+    <div class="orgs">
+      <ng-template [ngIf]="organizations.length">
+        <div class="org" *ngFor="let orgData of organizations">
+          <div class="org__data">
+            <div class="org__name">{{ orgData.name }}</div>
+            <div class="org__contact">{{ orgData.contacts }}</div>
+            <div class="org__link">{{ orgData.link }}</div>
+          </div>
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Delete"
+            (click)="deleteOrg(orgData.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="!organizations.length">
+        No organizations exists
+      </ng-template>
+    </div>
+  </div>
+  <div class="dashboard__left">
+    <div class="dashboard__header">
+      <h1>Create event form</h1>
+    </div>
+    <div [formGroup]="createEventForm" class="form" *ngIf="config">
+      <mat-form-field appearance="outline">
+        <mat-label>Event name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Banner url</mat-label>
+        <input matInput formControlName="image" />
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Address</mat-label>
-    <input matInput formControlName="place" />
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization name</mat-label>
+        <mat-select formControlName="orgId">
+          <mat-option *ngFor="let org of organizations" [value]="org.id">
+            {{ org.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Link from google maps</mat-label>
-    <input matInput formControlName="googleMapsLink" />
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <mat-select formControlName="city">
+          <mat-option
+            *ngFor="let region of config.region.values"
+            [value]="region"
+          >
+            {{ region }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Event type</mat-label>
-    <mat-select formControlName="type">
-      <!-- <mat-option *ngFor="let type of config.formats.values"></mat-option> -->
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="place" />
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Price</mat-label>
-    <input matInput formControlName="price" />
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Link from google maps</mat-label>
+        <input matInput formControlName="googleMapsLink" />
+      </mat-form-field>
 
-  <div class="button-bar">
-    <button mat-flat-button color="primary">Add event</button>
+      <div class="formats">
+        <div class="format-control">
+          <button
+            mat-stroked-button
+            color="primary"
+            [matMenuTriggerFor]="formats"
+          >
+            Select Event Type
+          </button>
+
+          {{
+            createEventForm.get("type")?.value !== ""
+              ? createEventForm.get("type")?.value
+              : "Select value please."
+          }}
+        </div>
+
+        <mat-menu #formats="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="business">Business</button>
+          <button mat-menu-item [matMenuTriggerFor]="culture">Culture</button>
+          <button mat-menu-item [matMenuTriggerFor]="education">
+            Education
+          </button>
+          <button mat-menu-item [matMenuTriggerFor]="entertainment">
+            Entertainment
+          </button>
+        </mat-menu>
+
+        <mat-menu #business="matMenu">
+          <button
+            mat-menu-item
+            *ngFor="let item of config.formats.values.business"
+            (click)="setEventType(item)"
+          >
+            {{ item }}
+          </button>
+        </mat-menu>
+
+        <mat-menu #culture="matMenu">
+          <button
+            mat-menu-item
+            *ngFor="let item of config.formats.values.culture"
+            (click)="setEventType(item)"
+          >
+            {{ item }}
+          </button>
+        </mat-menu>
+
+        <mat-menu #education="matMenu">
+          <button
+            mat-menu-item
+            *ngFor="let item of config.formats.values.education"
+            (click)="setEventType(item)"
+          >
+            {{ item }}
+          </button>
+        </mat-menu>
+        <mat-menu #entertainment="matMenu">
+          <button
+            mat-menu-item
+            *ngFor="let item of config.formats.values.entertainment"
+            (click)="setEventType(item)"
+          >
+            {{ item }}
+          </button>
+        </mat-menu>
+      </div>
+      <div class="multi">
+        <mat-form-field appearance="outline" class="date">
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            formControlName="startDate"
+            [matDatepicker]="picker"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="date">
+          <mat-label>End Date</mat-label>
+
+          <input matInput formControlName="endDate" [matDatepicker]="picker2" />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Time</mat-label>
+        <mat-select formControlName="time">
+          <mat-option *ngFor="let time of config.time.values" [value]="time">
+            {{ time.name }} {{ time.from }} - {{ time.to }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p class="title">Age</p>
+      <div class="multi">
+        <mat-form-field appearance="outline">
+          <mat-label>From</mat-label>
+          <mat-select
+            formControlName="ageRestrictionFrom"
+            (selectionChange)="ageFromChangeHandle($event)"
+          >
+            <mat-option *ngFor="let age of config.age.values" [value]="age">
+              <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
+              <ng-template [ngIf]="age === 200">No limit</ng-template>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>To</mat-label>
+          <mat-select formControlName="ageRestrictionTo">
+            <mat-option *ngFor="let age of config.age.values" [value]="age">
+              <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
+              <ng-template [ngIf]="age === 200">No limit</ng-template>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <p class="title">Price</p>
+
+      <div class="multi">
+        <mat-form-field appearance="outline">
+          <mat-label>From</mat-label>
+          <mat-select
+            formControlName="priceFrom"
+            (selectionChange)="priceFromChangeHandle($event)"
+          >
+            <mat-option
+              *ngFor="let price of config.priceFrom.values"
+              [value]="price"
+            >
+              <ng-template [ngIf]="price !== 101">{{ price }}</ng-template>
+              <ng-template [ngIf]="price === 101">100+</ng-template>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>To</mat-label>
+          <mat-select formControlName="priceTo">
+            <mat-option
+              *ngFor="let price of config.priceTo.values"
+              [value]="price"
+            >
+              <ng-template [ngIf]="price !== 2147483647">{{
+                price
+              }}</ng-template>
+              <ng-template [ngIf]="price === 2147483647">infinity</ng-template>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="button-bar">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!createEventForm.valid"
+          (click)="createEvent(createEventForm.value)"
+        >
+          Add event
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard__view-area">
+    <div class="event" *ngFor="let event of events"></div>
   </div>
 </div>

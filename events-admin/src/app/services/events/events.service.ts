@@ -18,7 +18,8 @@ export interface IEvent {
   type: string;
   ageRestrictionFrom: number;
   ageRestrictionTo: number;
-  price: number;
+  priceFrom: number;
+  priceTo: number;
   description: string;
   startDate: number;
   endDate: number;
