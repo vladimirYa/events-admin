@@ -27,9 +27,10 @@ export class AppComponent implements OnInit {
   selectionData: FileData[] = [];
   config: any;
   events: IEvent[] = [];
+  eventsToShow: IEvent[] = [];
   organizations: Organization[] = [];
   isShowOrgs: boolean = false;
-
+  searchForm!: FormGroup;
   constructor(
     public eventsService: EventsService,
     public orgsService: OrganizationsService
@@ -37,14 +38,34 @@ export class AppComponent implements OnInit {
     this.initForm();
   }
 
+  getAllEvents() {
+    this.eventsService
+      .getEvents()
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.events = res;
+        this.eventsToShow = res;
+      });
+  }
+
   ngOnInit(): void {
-    this.eventsService.getEvents().subscribe((res) => {
-      this.events = res;
+    this.getAllEvents();
+    this.searchForm = new FormGroup({
+      search: new FormControl(''),
+    });
+
+    this.searchForm.valueChanges.subscribe((v) => {
+      if (v.search) {
+        this.eventsToShow = this.events.filter((event: IEvent) =>
+          event.name.includes(v.search)
+        );
+      } else {
+        this.eventsToShow = [...this.events];
+      }
     });
 
     this.eventsService.getConfig().subscribe((config) => {
       this.config = config;
-      console.log(config);
     });
 
     this.getOrganizations();
@@ -97,7 +118,6 @@ export class AppComponent implements OnInit {
   }
 
   ageFromChangeHandle(event: MatSelectChange) {
-    console.log(event);
     if (this.createEventForm.get('ageRestrictionTo')?.value === '') {
       this.createEventForm.get('ageRestrictionTo')?.setValue(200);
     }
@@ -127,18 +147,27 @@ export class AppComponent implements OnInit {
         new Date(value.endDate).setHours(value.endTime.split(':')[0])
       ).setMinutes(value.endTime.split(':')[1]),
     };
-    console.log(payload);
-    // merge time to date
-    this.eventsService.createEvent(payload).subscribe((res) => {
-      console.log(res);
-      const fileNames: string[] = [];
-      const formData = new FormData();
-      for (let i = 0; i < this.currentSelection.length; i++) {
-        fileNames.push(this.currentSelection[i].name);
 
-        formData.append('images', this.currentSelection[i]);
-      }
-    });
+    this.eventsService
+      .createEvent(payload)
+      .pipe(take(1))
+      .subscribe((res) => {
+        const formData = new FormData();
+
+        for (let i = 0; i < this.currentSelection.length; i++) {
+          formData.append('images', this.currentSelection[i]);
+        }
+
+        console.log('LETSGOO');
+        this.eventsService
+          .uploadImage(res.id as number, formData)
+          .pipe(take(1))
+          .subscribe((uploadRes) => {
+            console.log(uploadRes);
+
+            this.getAllEvents();
+          });
+      });
     // send upload image request after event created
   }
 
@@ -167,7 +196,15 @@ export class AppComponent implements OnInit {
         this.getOrganizations();
       });
   }
-
+  deleteEvent(id: number | undefined) {
+    this.eventsService
+      .deleteEventById(id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        console.log(res);
+        this.getAllEvents();
+      });
+  }
   ///// file upload
 
   onFileSelected(event: any): void {
@@ -197,5 +234,9 @@ export class AppComponent implements OnInit {
         return selectedFile.name !== file.name;
       }
     ) as any;
+  }
+
+  msToDate(ms: number) {
+    return new Date(ms);
   }
 }

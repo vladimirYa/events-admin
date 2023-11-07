@@ -301,7 +301,67 @@
       </div>
     </div>
   </div>
-  <div class="dashboard__view-area">
-    <div class="event" *ngFor="let event of events"></div>
+  <div class="dashboard__left" style="width: 700px">
+    <div class="dashboard__header header-view" [formGroup]="searchForm">
+      <h1>View all events</h1>
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Search by event name</mat-label>
+        <input matInput formControlName="search" />
+      </mat-form-field>
+    </div>
+    <div class="scroll-wrapper">
+      <div class="event" *ngFor="let event of eventsToShow">
+        <div class="event__image">
+          <img
+            [src]="
+              'https://09c7-89-71-160-107.ngrok-free.app/' + event.images[0]
+            "
+            alt=""
+          />
+        </div>
+        <div class="event__block">
+          <h2 class="event__name">{{ event.name }}</h2>
+          <p class="tiny">{{ event.type }}</p>
+
+          <p class="tiny">{{ event.org.name }}</p>
+          <p class="event__field">
+            <span class="ellipses tiny" style="max-width: 80px"
+              >{{ event.city }}, {{ event.place }}</span
+            >
+            |
+            <span class="map-link ellipses tiny" style="max-width: 100px">{{
+              event.googleMapsLink
+            }}</span>
+          </p>
+        </div>
+        <div class="event__block">
+          <h2 class="event__name"></h2>
+          <p class="tiny">
+            {{ msToDate(event.startDate) | date : "YY MMM d, HH:mm" }} -
+            {{ msToDate(event.endDate) | date : "YY MMM d, HH:mm" }}
+          </p>
+          <p class="tiny">
+            <span class="bold"> Age:</span> {{ event.ageRestrictionFrom }} -
+            {{
+              event.ageRestrictionTo === 200
+                ? "&#8734;"
+                : event.ageRestrictionTo
+            }}
+          </p>
+          <p class="tiny">
+            <span class="bold">Price:</span> {{ event.priceFrom }}e -
+            {{ event.priceTo }}e
+          </p>
+        </div>
+        <button
+          mat-icon-button
+          color="primary"
+          aria-label="Delete"
+          (click)="deleteEvent(event.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

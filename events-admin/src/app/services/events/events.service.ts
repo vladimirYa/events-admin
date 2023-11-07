@@ -11,7 +11,8 @@ interface Organization {
 export interface IEvent {
   id?: number;
   name: string;
-  image: string;
+  // image: string;
+  images: string[];
   org: Organization;
   city: string;
   place: string;
@@ -49,30 +50,47 @@ export class EventsService {
   constructor(public http: HttpClient) {}
 
   getEvents(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>('http://localhost:8080/events');
+    return this.http.get<IEvent[]>(
+      'https://09c7-89-71-160-107.ngrok-free.app/events'
+    );
   }
 
   createEvent(body: EventPayload): Observable<IEvent> {
-    return this.http.post<IEvent>('http://localhost:8080/events', body);
+    return this.http.post<IEvent>(
+      'https://09c7-89-71-160-107.ngrok-free.app/events',
+      body
+    );
   }
 
   updateEvent(body: IEvent): Observable<IEvent> {
-    return this.http.put<IEvent>('http://localhost:8080/events', body);
+    return this.http.put<IEvent>(
+      'https://09c7-89-71-160-107.ngrok-free.app/events',
+      body
+    );
   }
 
   getEventById(id: string): Observable<IEvent> {
-    return this.http.get<IEvent>(`http://localhost:8080/events/${id}`);
+    return this.http.get<IEvent>(
+      `https://09c7-89-71-160-107.ngrok-free.app/events/${id}`
+    );
   }
 
-  deleteEventById(id: string): Observable<IEvent> {
-    return this.http.delete<IEvent>(`http://localhost:8080/events/${id}`);
+  deleteEventById(id: number | undefined): Observable<IEvent> {
+    return this.http.delete<IEvent>(
+      `https://09c7-89-71-160-107.ngrok-free.app/events/${id}`
+    );
   }
 
   getConfig(): Observable<any> {
-    return this.http.get('http://localhost:8080/configs/event-filter');
+    return this.http.get(
+      'https://09c7-89-71-160-107.ngrok-free.app/configs/event-filter'
+    );
   }
 
-  uploadImage(eventId: string, formData: FormData): Observable<any> {
-    return this.http.post(`/events/${eventId}/images`, formData);
+  uploadImage(eventId: number, formData: FormData): Observable<any> {
+    return this.http.post(
+      `https://09c7-89-71-160-107.ngrok-free.app/events/${eventId}/images`,
+      formData
+    );
   }
 }
