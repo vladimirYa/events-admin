@@ -16,20 +16,26 @@ export class OrganizationsService {
   constructor(public http: HttpClient) {}
 
   getOrgs(): Observable<Organization[]> {
-    return this.http.get<Organization[]>(window.location.origin + '/orgs');
+    return this.http.get<Organization[]>('http://34.154.88.126:8080' + '/orgs');
   }
 
   createOrg(body: Organization): Observable<Organization> {
-    return this.http.post<Organization>(window.location.origin + '/orgs', body);
+    return this.http.post<Organization>(
+      'http://34.154.88.126:8080' + '/orgs',
+      body
+    );
   }
 
   updateOrg(body: Organization): Observable<Organization> {
-    return this.http.put<Organization>(window.location.origin + '/orgs', body);
+    return this.http.put<Organization>(
+      'http://34.154.88.126:8080' + '/orgs',
+      body
+    );
   }
 
   deleteOrg(id: any): Observable<Organization> {
     return this.http.delete<Organization>(
-      window.location.origin + `/orgs/${id}`
+      'http://34.154.88.126:8080' + `/orgs/${id}`
     );
   }
 }

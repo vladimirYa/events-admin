@@ -50,32 +50,37 @@ export class EventsService {
   constructor(public http: HttpClient) {}
 
   getEvents(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>(window.location.origin + '/events');
+    return this.http.get<IEvent[]>('http://34.154.88.126:8080' + '/events');
   }
 
   createEvent(body: EventPayload): Observable<IEvent> {
-    return this.http.post<IEvent>(window.location.origin + '/events', body);
+    return this.http.post<IEvent>(
+      'http://34.154.88.126:8080' + '/events',
+      body
+    );
   }
 
   updateEvent(body: IEvent): Observable<IEvent> {
-    return this.http.put<IEvent>(window.location.origin + '/events', body);
+    return this.http.put<IEvent>('http://34.154.88.126:8080' + '/events', body);
   }
 
   getEventById(id: string): Observable<IEvent> {
-    return this.http.get<IEvent>(window.location.origin + `/events/${id}`);
+    return this.http.get<IEvent>('http://34.154.88.126:8080' + `/events/${id}`);
   }
 
   deleteEventById(id: number | undefined): Observable<IEvent> {
-    return this.http.delete<IEvent>(window.location.origin + `/events/${id}`);
+    return this.http.delete<IEvent>(
+      'http://34.154.88.126:8080' + `/events/${id}`
+    );
   }
 
   getConfig(): Observable<any> {
-    return this.http.get(window.location.origin + `/configs/event-filter`);
+    return this.http.get('http://34.154.88.126:8080' + `/configs/event-filter`);
   }
 
   uploadImage(eventId: number, formData: FormData): Observable<any> {
     return this.http.post(
-      window.location.origin + `/events/${eventId}/images`,
+      'http://34.154.88.126:8080' + `/events/${eventId}/images`,
       formData
     );
   }
