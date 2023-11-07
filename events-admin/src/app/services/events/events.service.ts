@@ -50,46 +50,32 @@ export class EventsService {
   constructor(public http: HttpClient) {}
 
   getEvents(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>(
-      'https://09c7-89-71-160-107.ngrok-free.app/events'
-    );
+    return this.http.get<IEvent[]>(window.location.origin + '/events');
   }
 
   createEvent(body: EventPayload): Observable<IEvent> {
-    return this.http.post<IEvent>(
-      'https://09c7-89-71-160-107.ngrok-free.app/events',
-      body
-    );
+    return this.http.post<IEvent>(window.location.origin + '/events', body);
   }
 
   updateEvent(body: IEvent): Observable<IEvent> {
-    return this.http.put<IEvent>(
-      'https://09c7-89-71-160-107.ngrok-free.app/events',
-      body
-    );
+    return this.http.put<IEvent>(window.location.origin + '/events', body);
   }
 
   getEventById(id: string): Observable<IEvent> {
-    return this.http.get<IEvent>(
-      `https://09c7-89-71-160-107.ngrok-free.app/events/${id}`
-    );
+    return this.http.get<IEvent>(window.location.origin + `/events/${id}`);
   }
 
   deleteEventById(id: number | undefined): Observable<IEvent> {
-    return this.http.delete<IEvent>(
-      `https://09c7-89-71-160-107.ngrok-free.app/events/${id}`
-    );
+    return this.http.delete<IEvent>(window.location.origin + `/events/${id}`);
   }
 
   getConfig(): Observable<any> {
-    return this.http.get(
-      'https://09c7-89-71-160-107.ngrok-free.app/configs/event-filter'
-    );
+    return this.http.get(window.location.origin + `/configs/event-filter`);
   }
 
   uploadImage(eventId: number, formData: FormData): Observable<any> {
     return this.http.post(
-      `https://09c7-89-71-160-107.ngrok-free.app/events/${eventId}/images`,
+      window.location.origin + `/events/${eventId}/images`,
       formData
     );
   }
