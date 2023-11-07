@@ -9,6 +9,7 @@ interface Organization {
 }
 
 export interface IEvent {
+  id?: number;
   name: string;
   image: string;
   org: Organization;
@@ -18,6 +19,22 @@ export interface IEvent {
   type: string;
   ageRestrictionFrom: number;
   ageRestrictionTo: number;
+  priceFrom: number;
+  priceTo: number;
+  description: string;
+  startDate: number;
+  endDate: number;
+}
+
+export interface EventPayload {
+  name: string;
+  orgId: number;
+  city: string;
+  place: string;
+  googleMapsLink: string;
+  type: string;
+  ageRestrictionFrom: string;
+  ageRestrictionTo: string;
   priceFrom: number;
   priceTo: number;
   description: string;
@@ -35,7 +52,7 @@ export class EventsService {
     return this.http.get<IEvent[]>('http://localhost:8080/events');
   }
 
-  createEvent(body: IEvent): Observable<IEvent> {
+  createEvent(body: EventPayload): Observable<IEvent> {
     return this.http.post<IEvent>('http://localhost:8080/events', body);
   }
 
@@ -53,5 +70,9 @@ export class EventsService {
 
   getConfig(): Observable<any> {
     return this.http.get('http://localhost:8080/configs/event-filter');
+  }
+
+  uploadImage(eventId: string, formData: FormData): Observable<any> {
+    return this.http.post(`/events/${eventId}/images`, formData);
   }
 }

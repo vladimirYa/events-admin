@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { EventsService, IEvent } from './services/events/events.service';
+import {
+  EventPayload,
+  EventsService,
+  IEvent,
+} from './services/events/events.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Organization, OrganizationsService } from './services/org/org.service';
 import { take } from 'rxjs';
 
+interface FileData {
+  name: string;
+  type: string;
+  size: number;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,11 +23,13 @@ export class AppComponent implements OnInit {
   title = 'events-admin';
   createEventForm!: FormGroup;
   orgForm!: FormGroup;
-
+  currentSelection!: FileList;
+  selectionData: FileData[] = [];
   config: any;
   events: IEvent[] = [];
   organizations: Organization[] = [];
   isShowOrgs: boolean = false;
+
   constructor(
     public eventsService: EventsService,
     public orgsService: OrganizationsService
@@ -42,13 +53,13 @@ export class AppComponent implements OnInit {
   initForm() {
     this.createEventForm = new FormGroup({
       name: new FormControl('', { validators: Validators.required }),
-      image: new FormControl('', { validators: Validators.required }),
       orgId: new FormControl('', { validators: Validators.required }),
       city: new FormControl('', { validators: Validators.required }),
       place: new FormControl('', { validators: Validators.required }),
       googleMapsLink: new FormControl('', { validators: Validators.required }),
       type: new FormControl('', { validators: Validators.required }),
-      time: new FormControl('', { validators: Validators.required }),
+      startTime: new FormControl('', { validators: Validators.required }),
+      endTime: new FormControl('', { validators: Validators.required }),
       ageRestrictionFrom: new FormControl('', {
         validators: Validators.required,
       }),
@@ -97,8 +108,38 @@ export class AppComponent implements OnInit {
   }
 
   createEvent(value: any) {
-    console.log(value);
-    // const payload: IEvent = { name: value.name };
+    const payload: EventPayload = {
+      name: value.name,
+      orgId: value.orgId,
+      city: value.city,
+      place: value.place,
+      googleMapsLink: value.googleMapsLink,
+      type: value.type,
+      ageRestrictionFrom: value.ageRestrictionFrom,
+      ageRestrictionTo: value.ageRestrictionTo,
+      priceFrom: value.priceFrom,
+      priceTo: value.priceTo,
+      description: value.description,
+      startDate: new Date(
+        new Date(value.startDate).setHours(value.startTime.split(':')[0])
+      ).setMinutes(value.startTime.split(':')[1]),
+      endDate: new Date(
+        new Date(value.endDate).setHours(value.endTime.split(':')[0])
+      ).setMinutes(value.endTime.split(':')[1]),
+    };
+    console.log(payload);
+    // merge time to date
+    this.eventsService.createEvent(payload).subscribe((res) => {
+      console.log(res);
+      const fileNames: string[] = [];
+      const formData = new FormData();
+      for (let i = 0; i < this.currentSelection.length; i++) {
+        fileNames.push(this.currentSelection[i].name);
+
+        formData.append('images', this.currentSelection[i]);
+      }
+    });
+    // send upload image request after event created
   }
 
   createOrganization(value: any) {
@@ -125,5 +166,36 @@ export class AppComponent implements OnInit {
         console.log(res);
         this.getOrganizations();
       });
+  }
+
+  ///// file upload
+
+  onFileSelected(event: any): void {
+    if (!event.target) return;
+    this.selectionData = [];
+    this.currentSelection = event.target.files;
+
+    if (this.currentSelection) {
+      for (let i = 0; i < this.currentSelection.length; i++) {
+        this.selectionData.push({
+          name: this.currentSelection[i].name,
+          size: this.currentSelection[i].size,
+          type: this.currentSelection[i].type.split('/')[1],
+        });
+      }
+    }
+  }
+  removeFile(file: FileData): void {
+    // this.fileRemoved.emit(file.name);
+    console.log(file);
+    this.selectionData = this.selectionData.filter((existingFile: FileData) => {
+      return existingFile.name !== file.name;
+    });
+
+    this.currentSelection = Array.from(this.currentSelection).filter(
+      (selectedFile) => {
+        return selectedFile.name !== file.name;
+      }
+    ) as any;
   }
 }

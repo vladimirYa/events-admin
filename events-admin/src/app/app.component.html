@@ -74,10 +74,27 @@
         <mat-label>Description</mat-label>
         <input matInput formControlName="description" />
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Banner url</mat-label>
-        <input matInput formControlName="image" />
-      </mat-form-field>
+      <div class="file-upload">
+        Select Image
+        <input type="file" multiple (change)="onFileSelected($event)" />
+
+        <div class="files" *ngIf="selectionData.length">
+          <div class="file" *ngFor="let file of selectionData">
+            <mat-icon>description</mat-icon>
+
+            <div class="file-data">
+              <div class="file-data__name">{{ file.name }}</div>
+              <div class="file-data__size">
+                {{ (file.size / 1024).toFixed(2) }}KB
+              </div>
+            </div>
+
+            <div class="close" (click)="removeFile(file)">
+              <mat-icon class="icon-close">close</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <mat-form-field appearance="outline">
         <mat-label>Organization name</mat-label>
@@ -202,14 +219,16 @@
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>
       </div>
-      <mat-form-field appearance="outline">
-        <mat-label>Time</mat-label>
-        <mat-select formControlName="time">
-          <mat-option *ngFor="let time of config.time.values" [value]="time">
-            {{ time.name }} {{ time.from }} - {{ time.to }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="multi">
+        <mat-form-field appearance="outline">
+          <mat-label>Start time(12:00 eg)</mat-label>
+          <input matInput formControlName="startTime" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>End time(14:00 eg)</mat-label>
+          <input matInput formControlName="endTime" />
+        </mat-form-field>
+      </div>
       <p class="title">Age</p>
       <div class="multi">
         <mat-form-field appearance="outline">
