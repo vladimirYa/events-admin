@@ -12,7 +12,7 @@
       <h1>Create Organization</h1>
     </div>
 
-    <div [formGroup]="orgForm" class="form form_org">
+    <div [formGroup]="orgForm" class="form">
       <mat-form-field appearance="outline">
         <mat-label>Organization name</mat-label>
         <input matInput formControlName="name" />
@@ -25,7 +25,7 @@
         <mat-label>Link</mat-label>
         <input matInput formControlName="link" />
       </mat-form-field>
-      <div class="button-bar" style="padding-right: 40px">
+      <div class="button-bar">
         <button
           mat-flat-button
           color="primary"
@@ -35,30 +35,36 @@
           Create organization
         </button>
       </div>
-    </div>
-    <h3>Existing organizations</h3>
+      <h3 class="orgs-header">Existing organizations</h3>
 
-    <div class="orgs">
-      <ng-template [ngIf]="organizations.length">
-        <div class="org" *ngFor="let orgData of organizations">
-          <div class="org__data">
-            <div class="org__name">{{ orgData.name }}</div>
-            <div class="org__contact">{{ orgData.contacts }}</div>
-            <div class="org__link">{{ orgData.link }}</div>
+      <div class="orgs">
+        <ng-template [ngIf]="organizations.length">
+          <div class="org" *ngFor="let orgData of organizations">
+            <div class="org__data">
+              <div class="org__name">{{ orgData.name }}</div>
+              <div class="org__contact">{{ orgData.contacts }}</div>
+              <a
+                [href]="orgData.link"
+                target="_blank"
+                class="org__link ellipses"
+                style="width: 180px"
+                >{{ orgData.link }}</a
+              >
+            </div>
+            <button
+              mat-icon-button
+              color="primary"
+              aria-label="Delete"
+              (click)="deleteOrg(orgData.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
-          <button
-            mat-icon-button
-            color="primary"
-            aria-label="Delete"
-            (click)="deleteOrg(orgData.id)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </ng-template>
-      <ng-template [ngIf]="!organizations.length">
-        No organizations exists
-      </ng-template>
+        </ng-template>
+        <ng-template [ngIf]="!organizations.length">
+          No organizations exists
+        </ng-template>
+      </div>
     </div>
   </div>
   <div class="dashboard__left">
@@ -72,7 +78,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
-        <input matInput formControlName="description" />
+        <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
       <div class="file-upload">
         Select Image
@@ -258,34 +264,13 @@
 
       <div class="multi">
         <mat-form-field appearance="outline">
-          <mat-label>From</mat-label>
-          <mat-select
-            formControlName="priceFrom"
-            (selectionChange)="priceFromChangeHandle($event)"
-          >
-            <mat-option
-              *ngFor="let price of config.priceFrom.values"
-              [value]="price"
-            >
-              <ng-template [ngIf]="price !== 101">{{ price }}</ng-template>
-              <ng-template [ngIf]="price === 101">100+</ng-template>
-            </mat-option>
-          </mat-select>
+          <mat-label>From (eg. 12.50)</mat-label>
+          <input matInput formControlName="priceFrom" type="text" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>To</mat-label>
-          <mat-select formControlName="priceTo">
-            <mat-option
-              *ngFor="let price of config.priceTo.values"
-              [value]="price"
-            >
-              <ng-template [ngIf]="price !== 2147483647">{{
-                price
-              }}</ng-template>
-              <ng-template [ngIf]="price === 2147483647">infinity</ng-template>
-            </mat-option>
-          </mat-select>
+          <mat-label>To (eg. 20)</mat-label>
+          <input matInput formControlName="priceTo" type="text" />
         </mat-form-field>
       </div>
 
@@ -301,9 +286,9 @@
       </div>
     </div>
   </div>
-  <div class="dashboard__left" style="width: 700px">
+  <div class="dashboard__left" style="width: 50%">
     <div class="dashboard__header header-view" [formGroup]="searchForm">
-      <h1>View all events</h1>
+      <h1 style="width: 260px">View all events</h1>
       <mat-form-field appearance="outline" class="search">
         <mat-label>Search by event name</mat-label>
         <input matInput formControlName="search" />

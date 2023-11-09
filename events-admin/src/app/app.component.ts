@@ -137,8 +137,8 @@ export class AppComponent implements OnInit {
       type: value.type,
       ageRestrictionFrom: value.ageRestrictionFrom,
       ageRestrictionTo: value.ageRestrictionTo,
-      priceFrom: value.priceFrom,
-      priceTo: value.priceTo,
+      priceFrom: +value.priceFrom,
+      priceTo: +value.priceTo,
       description: value.description,
       startDate: new Date(
         new Date(value.startDate).setHours(value.startTime.split(':')[0])
