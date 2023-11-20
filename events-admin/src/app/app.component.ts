@@ -79,8 +79,9 @@ export class AppComponent implements OnInit {
       place: new FormControl('', { validators: Validators.required }),
       googleMapsLink: new FormControl('', { validators: Validators.required }),
       type: new FormControl('', { validators: Validators.required }),
+      originUrl: new FormControl('', { validators: Validators.required }),
       startTime: new FormControl('', { validators: Validators.required }),
-      endTime: new FormControl('', { validators: Validators.required }),
+      endTime: new FormControl(''),
       ageRestrictionFrom: new FormControl('', {
         validators: Validators.required,
       }),
@@ -139,15 +140,21 @@ export class AppComponent implements OnInit {
       ageRestrictionTo: value.ageRestrictionTo,
       priceFrom: +value.priceFrom,
       priceTo: +value.priceTo,
+      originUrl: value.originUrl,
       description: value.description,
       startDate: new Date(
         new Date(value.startDate).setHours(value.startTime.split(':')[0])
       ).setMinutes(value.startTime.split(':')[1]),
-      endDate: new Date(
-        new Date(value.endDate).setHours(value.endTime.split(':')[0])
-      ).setMinutes(value.endTime.split(':')[1]),
+      endDate: new Date(value.endDate).getTime(),
+      hasNoEndTime: true,
     };
 
+    if (value.endTime) {
+      payload.hasNoEndTime = false;
+      payload.endDate = new Date(
+        new Date(payload.endDate).setHours(value.endTime.split(':')[0])
+      ).setMinutes(value.endTime.split(':')[1]);
+    }
     this.eventsService
       .createEvent(payload)
       .pipe(take(1))

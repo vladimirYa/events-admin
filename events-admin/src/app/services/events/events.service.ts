@@ -41,6 +41,8 @@ export interface EventPayload {
   description: string;
   startDate: number;
   endDate: number;
+  originUrl: string;
+  hasNoEndTime: boolean;
 }
 
 @Injectable({
