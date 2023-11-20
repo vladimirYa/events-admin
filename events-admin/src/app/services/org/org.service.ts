@@ -16,26 +16,26 @@ export class OrganizationsService {
   constructor(public http: HttpClient) {}
 
   getOrgs(): Observable<Organization[]> {
-    return this.http.get<Organization[]>('http://34.154.88.126:8080' + '/orgs');
+    return this.http.get<Organization[]>('https://idu.world/back' + '/orgs');
   }
 
   createOrg(body: Organization): Observable<Organization> {
     return this.http.post<Organization>(
-      'http://34.154.88.126:8080' + '/orgs',
+      'https://idu.world/back' + '/orgs',
       body
     );
   }
 
   updateOrg(body: Organization): Observable<Organization> {
     return this.http.put<Organization>(
-      'http://34.154.88.126:8080' + '/orgs',
+      'https://idu.world/back' + '/orgs',
       body
     );
   }
 
   deleteOrg(id: any): Observable<Organization> {
     return this.http.delete<Organization>(
-      'http://34.154.88.126:8080' + `/orgs/${id}`
+      'https://idu.world/back' + `/orgs/${id}`
     );
   }
 }

@@ -52,37 +52,32 @@ export class EventsService {
   constructor(public http: HttpClient) {}
 
   getEvents(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>('http://34.154.88.126:8080' + '/events');
+    return this.http.get<IEvent[]>('https://idu.world/back' + '/events');
   }
 
   createEvent(body: EventPayload): Observable<IEvent> {
-    return this.http.post<IEvent>(
-      'http://34.154.88.126:8080' + '/events',
-      body
-    );
+    return this.http.post<IEvent>('https://idu.world/back' + '/events', body);
   }
 
   updateEvent(body: IEvent): Observable<IEvent> {
-    return this.http.put<IEvent>('http://34.154.88.126:8080' + '/events', body);
+    return this.http.put<IEvent>('https://idu.world/back' + '/events', body);
   }
 
   getEventById(id: string): Observable<IEvent> {
-    return this.http.get<IEvent>('http://34.154.88.126:8080' + `/events/${id}`);
+    return this.http.get<IEvent>('https://idu.world/back' + `/events/${id}`);
   }
 
   deleteEventById(id: number | undefined): Observable<IEvent> {
-    return this.http.delete<IEvent>(
-      'http://34.154.88.126:8080' + `/events/${id}`
-    );
+    return this.http.delete<IEvent>('https://idu.world/back' + `/events/${id}`);
   }
 
   getConfig(): Observable<any> {
-    return this.http.get('http://34.154.88.126:8080' + `/configs/event-filter`);
+    return this.http.get('https://idu.world/back' + `/configs/event-filter`);
   }
 
   uploadImage(eventId: number, formData: FormData): Observable<any> {
     return this.http.post(
-      'http://34.154.88.126:8080' + `/events/${eventId}/images`,
+      'https://idu.world/back' + `/events/${eventId}/images`,
       formData
     );
   }
