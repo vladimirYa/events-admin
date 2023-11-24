@@ -43,6 +43,8 @@ export interface EventPayload {
   endDate: number;
   originUrl: string;
   hasNoEndTime: boolean;
+  addressAlias: string;
+  eventUrl: string;
 }
 
 @Injectable({

@@ -93,6 +93,8 @@ export class AppComponent implements OnInit {
       description: new FormControl('', { validators: Validators.required }),
       startDate: new FormControl('', { validators: Validators.required }),
       endDate: new FormControl('', { validators: Validators.required }),
+      addressAlias: new FormControl(''),
+      eventUrl: new FormControl('', { validators: Validators.required }),
     });
 
     this.orgForm = new FormGroup({
@@ -140,6 +142,8 @@ export class AppComponent implements OnInit {
       ageRestrictionTo: value.ageRestrictionTo,
       priceFrom: +value.priceFrom,
       priceTo: +value.priceTo,
+      addressAlias: value.addressAlias,
+      eventUrl: value.eventUrl,
       originUrl: value.originUrl,
       description: value.description,
       startDate: new Date(
