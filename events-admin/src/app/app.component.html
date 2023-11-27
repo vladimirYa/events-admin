@@ -321,27 +321,67 @@
             >
             |
             <span class="map-link ellipses tiny" style="max-width: 100px">{{
-              event.googleMapsLink
+              event.addressAlias
             }}</span>
           </p>
         </div>
         <div class="event__block">
           <h2 class="event__name"></h2>
           <p class="tiny">
-            {{ msToDate(event.startDate) | date : "YY MMM d, HH:mm" }} -
-            {{ msToDate(event.endDate) | date : "YY MMM d, HH:mm" }}
+            {{ msToDate(event.startDate) | date : "YY MMM d, HH:mm" }}
+            <ng-template [ngIf]="event.endDate">
+              -
+              {{
+                msToDate(event.endDate) | date : "YY MMM d, HH:mm"
+              }}</ng-template
+            >
           </p>
           <p class="tiny">
-            <span class="bold"> Age:</span> {{ event.ageRestrictionFrom }} -
-            {{
-              event.ageRestrictionTo === 200
-                ? "&#8734;"
-                : event.ageRestrictionTo
-            }}
+            <span class="bold"> Age:</span>
+            <ng-template
+              [ngIf]="
+                !(
+                  event.ageRestrictionFrom === 200 ||
+                  (event.ageRestrictionFrom === 0 &&
+                    event.ageRestrictionTo === 200)
+                )
+              "
+            >
+              {{
+                event.ageRestrictionFrom === 200
+                  ? "&#8734;"
+                  : event.ageRestrictionFrom
+              }}
+              -
+              {{
+                event.ageRestrictionTo === 200
+                  ? "&#8734;"
+                  : event.ageRestrictionTo
+              }}
+            </ng-template>
+            <ng-template
+              [ngIf]="
+                event.ageRestrictionFrom === 200 ||
+                (event.ageRestrictionFrom === 0 &&
+                  event.ageRestrictionTo === 200)
+              "
+            >
+              Без ограничений
+            </ng-template>
           </p>
           <p class="tiny">
-            <span class="bold">Price:</span> {{ event.priceFrom }}e -
-            {{ event.priceTo }}e
+            <span class="bold">Price:</span>
+            <ng-template [ngIf]="event.hasPrice">
+              <ng-template [ngIf]="event.priceTo !== 0">
+                {{ event.priceFrom }}e - {{ event.priceTo }}e
+              </ng-template>
+              <ng-template [ngIf]="event.priceTo === 0">
+                Бесплатное
+              </ng-template>
+            </ng-template>
+            <ng-template [ngIf]="!event.hasPrice">
+              Цена не указана
+            </ng-template>
           </p>
         </div>
         <button

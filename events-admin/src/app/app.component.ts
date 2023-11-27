@@ -161,6 +161,11 @@ export class AppComponent implements OnInit {
         new Date(payload.endDate).setHours(value.endTime.split(':')[0])
       ).setMinutes(value.endTime.split(':')[1]);
     }
+
+    if (payload.hasPrice) {
+      payload.priceFrom = +payload.priceFrom;
+      payload.priceTo = +payload.priceTo;
+    }
     this.eventsService
       .createEvent(payload)
       .pipe(take(1))

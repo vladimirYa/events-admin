@@ -25,6 +25,9 @@ export interface IEvent {
   description: string;
   startDate: number;
   endDate: number;
+  addressAlias: string;
+  hasPrice: boolean;
+  hasNoEndTime: boolean;
 }
 
 export interface EventPayload {
