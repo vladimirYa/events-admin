@@ -45,6 +45,7 @@ export interface EventPayload {
   hasNoEndTime: boolean;
   addressAlias: string;
   eventUrl: string;
+  hasPrice: boolean;
 }
 
 @Injectable({

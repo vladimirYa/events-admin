@@ -66,6 +66,7 @@ export class AppComponent implements OnInit {
 
     this.eventsService.getConfig().subscribe((config) => {
       this.config = config;
+      console.log(config);
     });
 
     this.getOrganizations();
@@ -79,7 +80,7 @@ export class AppComponent implements OnInit {
       place: new FormControl('', { validators: Validators.required }),
       googleMapsLink: new FormControl('', { validators: Validators.required }),
       type: new FormControl('', { validators: Validators.required }),
-      originUrl: new FormControl('', { validators: Validators.required }),
+      originUrl: new FormControl(''),
       startTime: new FormControl('', { validators: Validators.required }),
       endTime: new FormControl(''),
       ageRestrictionFrom: new FormControl('', {
@@ -88,18 +89,18 @@ export class AppComponent implements OnInit {
       ageRestrictionTo: new FormControl('', {
         validators: Validators.required,
       }),
-      priceFrom: new FormControl('', { validators: Validators.required }),
-      priceTo: new FormControl('', { validators: Validators.required }),
-      description: new FormControl('', { validators: Validators.required }),
+      priceFrom: new FormControl(null),
+      priceTo: new FormControl(null),
+      description: new FormControl(''),
       startDate: new FormControl('', { validators: Validators.required }),
-      endDate: new FormControl('', { validators: Validators.required }),
+      endDate: new FormControl(''),
       addressAlias: new FormControl(''),
       eventUrl: new FormControl('', { validators: Validators.required }),
     });
 
     this.orgForm = new FormGroup({
       name: new FormControl('', { validators: Validators.required }),
-      contacts: new FormControl('', { validators: Validators.required }),
+      contacts: new FormControl(''),
       link: new FormControl(''),
     });
 
@@ -140,8 +141,8 @@ export class AppComponent implements OnInit {
       type: value.type,
       ageRestrictionFrom: value.ageRestrictionFrom,
       ageRestrictionTo: value.ageRestrictionTo,
-      priceFrom: +value.priceFrom,
-      priceTo: +value.priceTo,
+      priceFrom: value.priceFrom,
+      priceTo: value.priceTo,
       addressAlias: value.addressAlias,
       eventUrl: value.eventUrl,
       originUrl: value.originUrl,
@@ -151,6 +152,7 @@ export class AppComponent implements OnInit {
       ).setMinutes(value.startTime.split(':')[1]),
       endDate: new Date(value.endDate).getTime(),
       hasNoEndTime: true,
+      hasPrice: !(value.priceFrom === null && value.priceTo === null),
     };
 
     if (value.endTime) {
@@ -169,13 +171,10 @@ export class AppComponent implements OnInit {
           formData.append('images', this.currentSelection[i]);
         }
 
-        console.log('LETSGOO');
         this.eventsService
           .uploadImage(res.id as number, formData)
           .pipe(take(1))
           .subscribe((uploadRes) => {
-            console.log(uploadRes);
-
             this.getAllEvents();
           });
       });
