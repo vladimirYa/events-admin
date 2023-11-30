@@ -305,7 +305,11 @@
         </mat-form-field>
       </div>
 
-      <mat-checkbox formControlName="isDonation">Is Donation</mat-checkbox>
+      <mat-checkbox
+        formControlName="isDonation"
+        *ngIf="createEventForm.get('priceFrom')?.value"
+        >Is Donation</mat-checkbox
+      >
       <div class="button-bar">
         <button
           mat-flat-button
@@ -335,7 +339,7 @@
           <h2 class="event__name">{{ event.name }}</h2>
           <p class="tiny">{{ event.type }}</p>
 
-          <p class="tiny">{{ event.org.name }}</p>
+          <p class="tiny">{{ event.org?.name }}</p>
           <p class="event__field">
             <span class="ellipses tiny" style="max-width: 80px"
               >{{ event.city }}, {{ event.place }}</span

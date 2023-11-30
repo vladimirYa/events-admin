@@ -167,7 +167,11 @@ export class AppComponent implements OnInit {
       ).setMinutes(value.startTime.split(':')[1]),
       endDate: new Date(value.endDate).getTime(),
       hasNoEndTime: true,
-      hasPrice: !(value.priceFrom === null && value.priceTo === null),
+      hasPrice: !(
+        value.priceFrom === null ||
+        (value.priceFrom === '' && value.priceTo === null) ||
+        value.priceTo === ''
+      ),
       isDonation: value.isDonation,
     };
 
