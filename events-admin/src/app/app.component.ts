@@ -279,4 +279,24 @@ export class AppComponent implements OnInit {
   msToDate(ms: number) {
     return new Date(ms);
   }
+
+  setPrice(event: IEvent): string {
+    if (event.isDonation) {
+      if (event.priceFrom === 0) {
+        return 'Вход свободный (Донат приветствуется)';
+      } else {
+        return `Вход свободный (Минимальный донат ${event.priceFrom})`;
+      }
+    } else {
+      if (event.hasPrice) {
+        if (event.priceTo === 0) {
+          return 'Вход свободный';
+        } else {
+          return `${event.priceFrom} - ${event.priceTo}`;
+        }
+      } else {
+        return 'Цена не указана';
+      }
+    }
+  }
 }

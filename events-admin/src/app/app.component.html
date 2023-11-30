@@ -396,7 +396,8 @@
           </p>
           <p class="tiny">
             <span class="bold">Price:</span>
-            <ng-template [ngIf]="event.hasPrice">
+            {{ setPrice(event) }}
+            <!-- <ng-template [ngIf]="event.hasPrice">
               <ng-template [ngIf]="event.priceTo !== 0">
                 {{ event.priceFrom }}e - {{ event.priceTo }}e
               </ng-template>
@@ -406,7 +407,7 @@
             </ng-template>
             <ng-template [ngIf]="!event.hasPrice">
               Цена не указана
-            </ng-template>
+            </ng-template> -->
           </p>
         </div>
         <button

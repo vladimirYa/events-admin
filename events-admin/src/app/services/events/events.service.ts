@@ -28,6 +28,7 @@ export interface IEvent {
   addressAlias: string;
   hasPrice: boolean;
   hasNoEndTime: boolean;
+  isDonation: boolean;
 }
 
 export interface EventPayload {
