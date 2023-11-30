@@ -252,7 +252,9 @@ input[type="file"]::file-selector-button:active {
     display: flex;
   }
 }
-
+mat-checkbox {
+  margin-left: 20px;
+}
 .scroll-wrapper {
   display: flex;
   flex-direction: column;

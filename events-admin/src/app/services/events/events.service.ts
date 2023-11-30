@@ -49,6 +49,7 @@ export interface EventPayload {
   addressAlias: string;
   eventUrl: string;
   hasPrice: boolean;
+  isDonation: boolean;
 }
 
 @Injectable({

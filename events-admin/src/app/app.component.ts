@@ -31,6 +31,8 @@ export class AppComponent implements OnInit {
   organizations: Organization[] = [];
   isShowOrgs: boolean = false;
   searchForm!: FormGroup;
+  isCreating: boolean = false;
+  eventFormtas: { [key: string]: Array<any> } = {};
   constructor(
     public eventsService: EventsService,
     public orgsService: OrganizationsService
@@ -57,7 +59,7 @@ export class AppComponent implements OnInit {
     this.searchForm.valueChanges.subscribe((v) => {
       if (v.search) {
         this.eventsToShow = this.events.filter((event: IEvent) =>
-          event.name.includes(v.search)
+          event.name.toLocaleLowerCase().includes(v.search.toLocaleLowerCase())
         );
       } else {
         this.eventsToShow = [...this.events];
@@ -66,7 +68,18 @@ export class AppComponent implements OnInit {
 
     this.eventsService.getConfig().subscribe((config) => {
       this.config = config;
-      console.log(config);
+      console.log(config.eventFormats.values);
+
+      config.eventFormats.values.forEach((eventFormat: any) => {
+        if (this.eventFormtas[eventFormat.category]) {
+          this.eventFormtas[eventFormat.category].push(eventFormat.label);
+        } else {
+          this.eventFormtas[eventFormat.category] = [];
+          this.eventFormtas[eventFormat.category].push(eventFormat.label);
+        }
+      });
+
+      console.log(this.eventFormtas);
     });
 
     this.getOrganizations();
@@ -75,7 +88,7 @@ export class AppComponent implements OnInit {
   initForm() {
     this.createEventForm = new FormGroup({
       name: new FormControl('', { validators: Validators.required }),
-      orgId: new FormControl('', { validators: Validators.required }),
+      orgId: new FormControl(''),
       city: new FormControl('', { validators: Validators.required }),
       place: new FormControl('', { validators: Validators.required }),
       googleMapsLink: new FormControl('', { validators: Validators.required }),
@@ -96,6 +109,7 @@ export class AppComponent implements OnInit {
       endDate: new FormControl(''),
       addressAlias: new FormControl(''),
       eventUrl: new FormControl('', { validators: Validators.required }),
+      isDonation: new FormControl(false),
     });
 
     this.orgForm = new FormGroup({
@@ -132,6 +146,7 @@ export class AppComponent implements OnInit {
   }
 
   createEvent(value: any) {
+    this.isCreating = true;
     const payload: EventPayload = {
       name: value.name,
       orgId: value.orgId,
@@ -153,6 +168,7 @@ export class AppComponent implements OnInit {
       endDate: new Date(value.endDate).getTime(),
       hasNoEndTime: true,
       hasPrice: !(value.priceFrom === null && value.priceTo === null),
+      isDonation: value.isDonation,
     };
 
     if (value.endTime) {
@@ -169,19 +185,24 @@ export class AppComponent implements OnInit {
     this.eventsService
       .createEvent(payload)
       .pipe(take(1))
-      .subscribe((res) => {
-        const formData = new FormData();
+      .subscribe({
+        next: (res) => {
+          const formData = new FormData();
 
-        for (let i = 0; i < this.currentSelection.length; i++) {
-          formData.append('images', this.currentSelection[i]);
-        }
+          for (let i = 0; i < this.currentSelection.length; i++) {
+            formData.append('images', this.currentSelection[i]);
+          }
 
-        this.eventsService
-          .uploadImage(res.id as number, formData)
-          .pipe(take(1))
-          .subscribe((uploadRes) => {
-            this.getAllEvents();
-          });
+          this.eventsService
+            .uploadImage(res.id as number, formData)
+            .pipe(take(1))
+            .subscribe((uploadRes) => {
+              this.getAllEvents();
+            });
+        },
+        complete: () => {
+          this.isCreating = false;
+        },
       });
     // send upload image request after event created
   }
