@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 interface Organization {
+  id: string;
   name: string;
   contacts: string;
   link: string;
 }
 
 export interface IEvent {
-  id?: number;
+  id: number;
   name: string;
   // image: string;
   images: string[];
@@ -29,6 +30,8 @@ export interface IEvent {
   hasPrice: boolean;
   hasNoEndTime: boolean;
   isDonation: boolean;
+  eventUrl: string;
+  originUrl: string;
 }
 
 export interface EventPayload {
@@ -67,7 +70,7 @@ export class EventsService {
     return this.http.post<IEvent>('https://idu.world/back' + '/events', body);
   }
 
-  updateEvent(body: IEvent): Observable<IEvent> {
+  updateEvent(body: EventPayload): Observable<IEvent> {
     return this.http.put<IEvent>('https://idu.world/back' + '/events', body);
   }
 

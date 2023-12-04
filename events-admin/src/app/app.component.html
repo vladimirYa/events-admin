@@ -104,7 +104,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Organization name</mat-label>
-        <mat-select formControlName="orgId">
+        <mat-select formControlName="orgId" [value]="eventToEdit?.org?.id">
           <mat-option *ngFor="let org of organizations" [value]="org.id">
             {{ org.name }}
           </mat-option>
@@ -273,6 +273,7 @@
           <mat-select
             formControlName="ageRestrictionFrom"
             (selectionChange)="ageFromChangeHandle($event)"
+            [value]="eventToEdit.ageRestrictionFrom"
           >
             <mat-option *ngFor="let age of config.age.values" [value]="age">
               <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
@@ -283,7 +284,10 @@
 
         <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
-          <mat-select formControlName="ageRestrictionTo">
+          <mat-select
+            formControlName="ageRestrictionTo"
+            [value]="eventToEdit.ageRestrictionTo"
+          >
             <mat-option *ngFor="let age of config.age.values" [value]="age">
               <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
               <ng-template [ngIf]="age === 200">No limit</ng-template>
@@ -312,12 +316,22 @@
       >
       <div class="button-bar">
         <button
+          *ngIf="!eventToEdit.id"
           mat-flat-button
           color="primary"
           [disabled]="!createEventForm.valid && !isCreating"
           (click)="createEvent(createEventForm.value)"
         >
           Add event
+        </button>
+        <button
+          *ngIf="eventToEdit.id"
+          mat-flat-button
+          color="primary"
+          [disabled]="!createEventForm.valid && !isCreating"
+          (click)="editEvent(createEventForm.value)"
+        >
+          Edit event
         </button>
       </div>
     </div>
@@ -331,7 +345,11 @@
       </mat-form-field>
     </div>
     <div class="scroll-wrapper">
-      <div class="event" *ngFor="let event of eventsToShow">
+      <div
+        class="event"
+        *ngFor="let event of eventsToShow"
+        [ngClass]="{ selected: event.id === eventToEdit.id }"
+      >
         <div class="event__image">
           <img [src]="'https://idu.world/back/' + event.images[0]" alt="" />
         </div>
@@ -397,17 +415,6 @@
           <p class="tiny">
             <span class="bold">Price:</span>
             {{ setPrice(event) }}
-            <!-- <ng-template [ngIf]="event.hasPrice">
-              <ng-template [ngIf]="event.priceTo !== 0">
-                {{ event.priceFrom }}e - {{ event.priceTo }}e
-              </ng-template>
-              <ng-template [ngIf]="event.priceTo === 0">
-                Бесплатное
-              </ng-template>
-            </ng-template>
-            <ng-template [ngIf]="!event.hasPrice">
-              Цена не указана
-            </ng-template> -->
           </p>
         </div>
         <button
@@ -417,6 +424,14 @@
           (click)="deleteEvent(event.id)"
         >
           <mat-icon>delete</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="primary"
+          aria-label="Delete"
+          (click)="selectToEdit(event)"
+        >
+          <mat-icon>edit</mat-icon>
         </button>
       </div>
     </div>

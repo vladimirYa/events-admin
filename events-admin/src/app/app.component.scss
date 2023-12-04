@@ -220,6 +220,10 @@ input[type="file"]::file-selector-button:active {
   border: 1px solid #eaeaea;
   align-items: center;
   padding-right: 0;
+  &.selected {
+    border-color: #3f51b5;
+    box-shadow: inset 2px 2px 0 #3f51b5, inset -2px -2px 0 #3f51b5;
+  }
   button {
     margin: 0 auto;
   }

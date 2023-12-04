@@ -4,7 +4,7 @@ import {
   EventsService,
   IEvent,
 } from './services/events/events.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Organization, OrganizationsService } from './services/org/org.service';
 import { take } from 'rxjs';
@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
   searchForm!: FormGroup;
   isCreating: boolean = false;
   eventFormtas: { [key: string]: Array<any> } = {};
+  eventToEdit: IEvent = {} as IEvent;
+
   constructor(
     public eventsService: EventsService,
     public orgsService: OrganizationsService
@@ -68,7 +70,6 @@ export class AppComponent implements OnInit {
 
     this.eventsService.getConfig().subscribe((config) => {
       this.config = config;
-      console.log(config.eventFormats.values);
 
       config.eventFormats.values.forEach((eventFormat: any) => {
         if (this.eventFormtas[eventFormat.category]) {
@@ -78,14 +79,11 @@ export class AppComponent implements OnInit {
           this.eventFormtas[eventFormat.category].push(eventFormat.label);
         }
       });
-
-      console.log(this.eventFormtas);
     });
 
     this.getOrganizations();
   }
-
-  initForm() {
+  initEventForm() {
     this.createEventForm = new FormGroup({
       name: new FormControl('', { validators: Validators.required }),
       orgId: new FormControl(''),
@@ -111,6 +109,9 @@ export class AppComponent implements OnInit {
       eventUrl: new FormControl('', { validators: Validators.required }),
       isDonation: new FormControl(false),
     });
+  }
+  initForm() {
+    this.initEventForm();
 
     this.orgForm = new FormGroup({
       name: new FormControl('', { validators: Validators.required }),
@@ -145,9 +146,87 @@ export class AppComponent implements OnInit {
     }
   }
 
+  selectToEdit(event: IEvent) {
+    console.log(event);
+    this.eventToEdit = event;
+    this.createEventForm.get('name')?.setValue(event.name);
+    this.createEventForm.get('city')?.setValue(event.city);
+    this.createEventForm.get('place')?.setValue(event.place);
+    this.createEventForm.get('googleMapsLink')?.setValue(event.googleMapsLink);
+    this.createEventForm.get('type')?.setValue(event.type);
+    this.createEventForm.get('addressAlias')?.setValue(event.addressAlias);
+    this.createEventForm.get('eventUrl')?.setValue(event.eventUrl);
+    this.createEventForm.get('originUrl')?.setValue(event.originUrl);
+    this.createEventForm.get('description')?.setValue(event.description);
+    this.createEventForm.get('isDonation')?.setValue(event.isDonation);
+    this.createEventForm.get('priceFrom')?.setValue(event.priceFrom);
+    this.createEventForm.get('priceTo')?.setValue(event.priceTo);
+    this.ageFromChangeHandle({
+      value: event.ageRestrictionFrom,
+    } as MatSelectChange);
+    this.createEventForm.get('startDate')?.setValue(new Date(event.startDate));
+    this.createEventForm.get('endDate')?.setValue(new Date(event.endDate));
+    this.createEventForm
+      .get('startTime')
+      ?.setValue(
+        new Date(event.startDate).toString().split(' ')[4].substr(0, 5)
+      );
+    this.createEventForm
+      .get('endTime')
+      ?.setValue(new Date(event.endDate).toString().split(' ')[4].substr(0, 5));
+  }
+
+  editEvent(value: any) {
+    this.isCreating = true;
+
+    const payload: EventPayload = this.generatePayload(
+      value,
+      this.eventToEdit.id
+    );
+
+    this.eventsService
+      .updateEvent(payload)
+      .pipe(take(1))
+      .subscribe({
+        next: (res) => {
+          this.isCreating = false;
+          this.eventToEdit = {} as IEvent;
+          this.initEventForm();
+        },
+      });
+  }
+
   createEvent(value: any) {
     this.isCreating = true;
-    const payload: EventPayload = {
+    const payload: EventPayload = this.generatePayload(value);
+
+    this.eventsService
+      .createEvent(payload)
+      .pipe(take(1))
+      .subscribe({
+        next: (res) => {
+          const formData = new FormData();
+
+          for (let i = 0; i < this.currentSelection.length; i++) {
+            formData.append('images', this.currentSelection[i]);
+          }
+
+          this.eventsService
+            .uploadImage(res.id as number, formData)
+            .pipe(take(1))
+            .subscribe((uploadRes) => {
+              this.getAllEvents();
+            });
+        },
+        complete: () => {
+          this.isCreating = false;
+        },
+      });
+    // send upload image request after event created
+  }
+  generatePayload(value: any, id?: number): EventPayload {
+    const payload = {
+      id: id ? id : null,
       name: value.name,
       orgId: value.orgId,
       city: value.city,
@@ -186,31 +265,9 @@ export class AppComponent implements OnInit {
       payload.priceFrom = +payload.priceFrom;
       payload.priceTo = +payload.priceTo;
     }
-    this.eventsService
-      .createEvent(payload)
-      .pipe(take(1))
-      .subscribe({
-        next: (res) => {
-          const formData = new FormData();
 
-          for (let i = 0; i < this.currentSelection.length; i++) {
-            formData.append('images', this.currentSelection[i]);
-          }
-
-          this.eventsService
-            .uploadImage(res.id as number, formData)
-            .pipe(take(1))
-            .subscribe((uploadRes) => {
-              this.getAllEvents();
-            });
-        },
-        complete: () => {
-          this.isCreating = false;
-        },
-      });
-    // send upload image request after event created
+    return payload;
   }
-
   createOrganization(value: any) {
     this.orgsService.createOrg(value).subscribe((res) => {
       this.getOrganizations();
@@ -245,6 +302,7 @@ export class AppComponent implements OnInit {
         this.getAllEvents();
       });
   }
+
   ///// file upload
 
   onFileSelected(event: any): void {
