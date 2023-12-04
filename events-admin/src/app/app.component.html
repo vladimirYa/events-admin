@@ -69,7 +69,10 @@
   </div>
   <div class="dashboard__left">
     <div class="dashboard__header">
-      <h1>Create event form</h1>
+      <h1 style="margin: 0">Create event form</h1>
+      <button mat-flat-button color="primary" (click)="initForm()">
+        Clear
+      </button>
     </div>
     <div [formGroup]="createEventForm" class="form" *ngIf="config">
       <mat-form-field appearance="outline">

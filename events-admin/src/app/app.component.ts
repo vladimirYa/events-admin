@@ -192,6 +192,7 @@ export class AppComponent implements OnInit {
           this.isCreating = false;
           this.eventToEdit = {} as IEvent;
           this.initEventForm();
+          this.getAllEvents();
         },
       });
   }
@@ -210,6 +211,7 @@ export class AppComponent implements OnInit {
           for (let i = 0; i < this.currentSelection.length; i++) {
             formData.append('images', this.currentSelection[i]);
           }
+          this.initEventForm();
 
           this.eventsService
             .uploadImage(res.id as number, formData)
