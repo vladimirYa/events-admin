@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   title = 'events-admin';
   createEventForm!: FormGroup;
   orgForm!: FormGroup;
-  currentSelection!: FileList;
+  currentSelection: FileList | undefined = undefined;
   selectionData: FileData[] = [];
   config: any;
   events: IEvent[] = [];
@@ -109,6 +109,8 @@ export class AppComponent implements OnInit {
       eventUrl: new FormControl('', { validators: Validators.required }),
       isDonation: new FormControl(false),
     });
+    this.currentSelection = undefined;
+    (document.getElementById('file-input') as any).value = '';
   }
   initForm() {
     this.initEventForm();
@@ -207,18 +209,19 @@ export class AppComponent implements OnInit {
       .subscribe({
         next: (res) => {
           const formData = new FormData();
+          if (this.currentSelection) {
+            for (let i = 0; i < this.currentSelection.length; i++) {
+              formData.append('images', this.currentSelection[i]);
+            }
+            this.initEventForm();
 
-          for (let i = 0; i < this.currentSelection.length; i++) {
-            formData.append('images', this.currentSelection[i]);
+            this.eventsService
+              .uploadImage(res.id as number, formData)
+              .pipe(take(1))
+              .subscribe((uploadRes) => {
+                this.getAllEvents();
+              });
           }
-          this.initEventForm();
-
-          this.eventsService
-            .uploadImage(res.id as number, formData)
-            .pipe(take(1))
-            .subscribe((uploadRes) => {
-              this.getAllEvents();
-            });
         },
         complete: () => {
           this.isCreating = false;
@@ -328,12 +331,13 @@ export class AppComponent implements OnInit {
     this.selectionData = this.selectionData.filter((existingFile: FileData) => {
       return existingFile.name !== file.name;
     });
-
-    this.currentSelection = Array.from(this.currentSelection).filter(
-      (selectedFile) => {
-        return selectedFile.name !== file.name;
-      }
-    ) as any;
+    if (this.currentSelection) {
+      this.currentSelection = Array.from(this.currentSelection).filter(
+        (selectedFile) => {
+          return selectedFile.name !== file.name;
+        }
+      ) as any;
+    }
   }
 
   msToDate(ms: number) {
