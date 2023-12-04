@@ -110,6 +110,7 @@ export class AppComponent implements OnInit {
       isDonation: new FormControl(false),
     });
     this.currentSelection = undefined;
+    this.selectionData = [];
     // (document.getElementById('file-input') as any).value = '';
   }
   initForm() {
