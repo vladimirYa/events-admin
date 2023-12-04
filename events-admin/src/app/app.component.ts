@@ -179,11 +179,11 @@ export class AppComponent implements OnInit {
   editEvent(value: any) {
     this.isCreating = true;
 
-    const payload: EventPayload = this.generatePayload(
+    let payload: EventPayload = this.generatePayload(
       value,
       this.eventToEdit.id
     );
-
+    payload = { ...payload, images: this.eventToEdit.images };
     this.eventsService
       .updateEvent(payload)
       .pipe(take(1))
