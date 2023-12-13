@@ -243,7 +243,7 @@ export class AppComponent implements OnInit {
       type: value.type,
       ageRestrictionFrom: value.ageRestrictionFrom
         ? value.ageRestrictionFrom
-        : 200,
+        : 0,
       ageRestrictionTo: value.ageRestrictionTo ? value.ageRestrictionTo : 200,
       priceFrom: value.priceFrom,
       priceTo: value.priceTo,
