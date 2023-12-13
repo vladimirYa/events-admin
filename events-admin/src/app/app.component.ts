@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   EventPayload,
   EventsService,
@@ -20,6 +20,7 @@ interface FileData {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef;
   title = 'events-admin';
   createEventForm!: FormGroup;
   orgForm!: FormGroup;
@@ -227,7 +228,10 @@ export class AppComponent implements OnInit {
           }
         },
         complete: () => {
+          this.fileInput.nativeElement.value = '';
           this.isCreating = false;
+          this.currentSelection = undefined;
+          this.selectionData = [];
         },
       });
     // send upload image request after event created
@@ -317,6 +321,7 @@ export class AppComponent implements OnInit {
 
   onFileSelected(event: any): void {
     if (!event.target) return;
+
     this.selectionData = [];
     this.currentSelection = event.target.files;
 
@@ -329,6 +334,8 @@ export class AppComponent implements OnInit {
         });
       }
     }
+    console.log(this.selectionData);
+    console.log(this.currentSelection);
   }
   removeFile(file: FileData): void {
     // this.fileRemoved.emit(file.name);

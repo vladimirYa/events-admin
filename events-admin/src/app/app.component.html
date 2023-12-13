@@ -83,9 +83,10 @@
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
-      <div class="file-upload">
+      <div class="file-upload" *ngIf="!isCreating">
         Select Image
         <input
+          #fileInput
           id="file-input"
           type="file"
           multiple
