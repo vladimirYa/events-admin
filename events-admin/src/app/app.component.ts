@@ -222,16 +222,19 @@ export class AppComponent implements OnInit {
             this.eventsService
               .uploadImage(res.id as number, formData)
               .pipe(take(1))
-              .subscribe((uploadRes) => {
-                this.getAllEvents();
+              .subscribe({
+                next: () => {
+                  this.getAllEvents();
+                },
+                complete: () => {
+                  this.fileInput.nativeElement.value = '';
+                  this.isCreating = false;
+                  this.currentSelection = undefined;
+                  this.selectionData = [];
+                  console.log('complete');
+                },
               });
           }
-        },
-        complete: () => {
-          this.fileInput.nativeElement.value = '';
-          this.isCreating = false;
-          this.currentSelection = undefined;
-          this.selectionData = [];
         },
       });
     // send upload image request after event created
