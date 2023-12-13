@@ -227,10 +227,11 @@ export class AppComponent implements OnInit {
                   this.getAllEvents();
                 },
                 complete: () => {
-                  this.fileInput.nativeElement.value = '';
                   this.isCreating = false;
                   this.currentSelection = undefined;
                   this.selectionData = [];
+                  this.fileInput.nativeElement.value = '';
+
                   console.log('complete');
                 },
               });
@@ -306,7 +307,7 @@ export class AppComponent implements OnInit {
       .deleteOrg(id)
       .pipe(take(1))
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         this.getOrganizations();
       });
   }
@@ -315,7 +316,7 @@ export class AppComponent implements OnInit {
       .deleteEventById(id)
       .pipe(take(1))
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         this.getAllEvents();
       });
   }
@@ -342,7 +343,7 @@ export class AppComponent implements OnInit {
   }
   removeFile(file: FileData): void {
     // this.fileRemoved.emit(file.name);
-    console.log(file);
+    // console.log(file);
     this.selectionData = this.selectionData.filter((existingFile: FileData) => {
       return existingFile.name !== file.name;
     });
