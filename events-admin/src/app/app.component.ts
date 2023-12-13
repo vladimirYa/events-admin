@@ -88,25 +88,21 @@ export class AppComponent implements OnInit {
       name: new FormControl('', { validators: Validators.required }),
       orgId: new FormControl(''),
       city: new FormControl('', { validators: Validators.required }),
-      place: new FormControl('', { validators: Validators.required }),
+      place: new FormControl(''),
       googleMapsLink: new FormControl('', { validators: Validators.required }),
       type: new FormControl('', { validators: Validators.required }),
       originUrl: new FormControl(''),
       startTime: new FormControl('', { validators: Validators.required }),
       endTime: new FormControl(''),
-      ageRestrictionFrom: new FormControl('', {
-        validators: Validators.required,
-      }),
-      ageRestrictionTo: new FormControl('', {
-        validators: Validators.required,
-      }),
+      ageRestrictionFrom: new FormControl(''),
+      ageRestrictionTo: new FormControl(''),
       priceFrom: new FormControl(null),
       priceTo: new FormControl(null),
       description: new FormControl(''),
       startDate: new FormControl('', { validators: Validators.required }),
       endDate: new FormControl(''),
       addressAlias: new FormControl(''),
-      eventUrl: new FormControl('', { validators: Validators.required }),
+      eventUrl: new FormControl(''),
       isDonation: new FormControl(false),
     });
     this.currentSelection = undefined;
@@ -139,15 +135,15 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ageFromChangeHandle(event: MatSelectChange) {
-    if (this.createEventForm.get('ageRestrictionTo')?.value === '') {
-      this.createEventForm.get('ageRestrictionTo')?.setValue(200);
-    }
+  // ageFromChangeHandle(event: MatSelectChange) {
+  //   if (this.createEventForm.get('ageRestrictionTo')?.value === '') {
+  //     this.createEventForm.get('ageRestrictionTo')?.setValue(200);
+  //   }
 
-    if (event.value === 200) {
-      this.createEventForm.get('ageRestrictionTo')?.setValue(200);
-    }
-  }
+  //   if (event.value === 200) {
+  //     this.createEventForm.get('ageRestrictionTo')?.setValue(200);
+  //   }
+  // }
 
   selectToEdit(event: IEvent) {
     console.log(event);
@@ -164,9 +160,15 @@ export class AppComponent implements OnInit {
     this.createEventForm.get('isDonation')?.setValue(event.isDonation);
     this.createEventForm.get('priceFrom')?.setValue(event.priceFrom);
     this.createEventForm.get('priceTo')?.setValue(event.priceTo);
-    this.ageFromChangeHandle({
-      value: event.ageRestrictionFrom,
-    } as MatSelectChange);
+    // this.ageFromChangeHandle({
+    //   value: event.ageRestrictionFrom,
+    // } as MatSelectChange);
+    this.createEventForm
+      .get('ageRestrictionFrom')
+      ?.setValue(event.ageRestrictionFrom);
+    this.createEventForm
+      .get('ageRestrictionTo')
+      ?.setValue(event.ageRestrictionTo);
     this.createEventForm.get('startDate')?.setValue(new Date(event.startDate));
     this.createEventForm.get('endDate')?.setValue(new Date(event.endDate));
     this.createEventForm
@@ -239,8 +241,10 @@ export class AppComponent implements OnInit {
       place: value.place,
       googleMapsLink: value.googleMapsLink,
       type: value.type,
-      ageRestrictionFrom: value.ageRestrictionFrom,
-      ageRestrictionTo: value.ageRestrictionTo,
+      ageRestrictionFrom: value.ageRestrictionFrom
+        ? value.ageRestrictionFrom
+        : 200,
+      ageRestrictionTo: value.ageRestrictionTo ? value.ageRestrictionTo : 200,
       priceFrom: value.priceFrom,
       priceTo: value.priceTo,
       addressAlias: value.addressAlias,

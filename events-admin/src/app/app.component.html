@@ -278,20 +278,26 @@
       <div class="multi">
         <mat-form-field appearance="outline">
           <mat-label>From</mat-label>
+          <input matInput formControlName="ageRestrictionFrom" />
+
+          <!-- <mat-label>From</mat-label>
           <mat-select
             formControlName="ageRestrictionFrom"
             (selectionChange)="ageFromChangeHandle($event)"
             [value]="eventToEdit.ageRestrictionFrom"
           >
+
             <mat-option *ngFor="let age of config.age.values" [value]="age">
               <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
               <ng-template [ngIf]="age === 200">No limit</ng-template>
             </mat-option>
-          </mat-select>
+          </mat-select> -->
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
+          <input matInput formControlName="ageRestrictionTo" />
+          <!-- <mat-label>To</mat-label>
           <mat-select
             formControlName="ageRestrictionTo"
             [value]="eventToEdit.ageRestrictionTo"
@@ -300,7 +306,7 @@
               <ng-template [ngIf]="age !== 200">{{ age }}</ng-template>
               <ng-template [ngIf]="age === 200">No limit</ng-template>
             </mat-option>
-          </mat-select>
+          </mat-select> -->
         </mat-form-field>
       </div>
       <p class="title">Price</p>
