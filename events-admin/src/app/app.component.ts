@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
 
     this.eventsService.getConfig().subscribe((config) => {
       this.config = config;
-
+      console.log(config);
       config.eventFormats.values.forEach((eventFormat: any) => {
         if (this.eventFormtas[eventFormat.category]) {
           this.eventFormtas[eventFormat.category].push(eventFormat.label);
@@ -111,6 +111,8 @@ export class AppComponent implements OnInit {
     // (document.getElementById('file-input') as any).value = '';
   }
   initForm() {
+    this.eventToEdit = {} as IEvent;
+
     this.initEventForm();
 
     this.orgForm = new FormGroup({

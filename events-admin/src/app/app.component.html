@@ -180,7 +180,9 @@
             Развлечение
           </button>
           <button mat-menu-item [matMenuTriggerFor]="health">Здоровье</button>
-          <button mat-menu-item [matMenuTriggerFor]="sport">Спорт</button>
+          <button mat-menu-item [matMenuTriggerFor]="sport">
+            Активный отдых
+          </button>
         </mat-menu>
 
         <mat-menu #business="matMenu">
@@ -233,7 +235,7 @@
         <mat-menu #sport="matMenu">
           <button
             mat-menu-item
-            *ngFor="let item of eventFormtas['Спорт']"
+            *ngFor="let item of eventFormtas['Активный отдых']"
             (click)="setEventType(item)"
           >
             {{ item }}
