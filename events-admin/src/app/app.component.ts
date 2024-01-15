@@ -103,6 +103,7 @@ export class AppComponent implements OnInit {
       startDate: new FormControl('', { validators: Validators.required }),
       endDate: new FormControl(''),
       addressAlias: new FormControl(''),
+      linkToBuyAlias: new FormControl(''),
       eventUrl: new FormControl(''),
       isDonation: new FormControl(false),
     });
@@ -163,6 +164,7 @@ export class AppComponent implements OnInit {
     this.createEventForm.get('isDonation')?.setValue(event.isDonation);
     this.createEventForm.get('priceFrom')?.setValue(event.priceFrom);
     this.createEventForm.get('priceTo')?.setValue(event.priceTo);
+    this.createEventForm.get('linkToBuyAlias')?.setValue(event.linkToBuyAlias);
     // this.ageFromChangeHandle({
     //   value: event.ageRestrictionFrom,
     // } as MatSelectChange);
@@ -272,6 +274,7 @@ export class AppComponent implements OnInit {
         value.priceTo === ''
       ),
       isDonation: value.isDonation,
+      linkToBuyAlias: value.linkToBuyAlias,
     };
 
     if (value.endTime) {

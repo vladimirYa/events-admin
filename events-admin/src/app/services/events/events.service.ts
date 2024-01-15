@@ -32,6 +32,7 @@ export interface IEvent {
   isDonation: boolean;
   eventUrl: string;
   originUrl: string;
+  linkToBuyAlias: string;
 }
 
 export interface EventPayload {
@@ -55,6 +56,7 @@ export interface EventPayload {
   hasPrice: boolean;
   isDonation: boolean;
   images?: string[];
+  linkToBuyAlias?: string;
 }
 
 @Injectable({
