@@ -149,13 +149,14 @@
         <input matInput formControlName="eventUrl" />
       </mat-form-field>
       <mat-form-field appearance="outline">
+        <mat-label>Link on event details ALIAS</mat-label>
+        <input matInput formControlName="linkToBuyAlias" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Link where to buy</mat-label>
         <input matInput formControlName="originUrl" />
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Link where to buy ALIAS</mat-label>
-        <input matInput formControlName="linkToBuyAlias" />
-      </mat-form-field>
+
       <div class="formats">
         <div class="format-control">
           <button
@@ -283,10 +284,20 @@
       <p class="title">Age</p>
       <div class="multi">
         <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="ageRestriction"
+            [value]="eventToEdit.ageRestriction"
+          >
+            <mat-option *ngFor="let age of ageValues" [value]="age.value">
+              {{ age.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- <mat-form-field appearance="outline">
           <mat-label>From</mat-label>
-          <input matInput formControlName="ageRestrictionFrom" />
+          <input matInput formControlName="ageRestrictionFrom" /> -->
 
-          <!-- <mat-label>From</mat-label>
+        <!-- <mat-label>From</mat-label>
           <mat-select
             formControlName="ageRestrictionFrom"
             (selectionChange)="ageFromChangeHandle($event)"
@@ -298,12 +309,12 @@
               <ng-template [ngIf]="age === 200">No limit</ng-template>
             </mat-option>
           </mat-select> -->
-        </mat-form-field>
+        <!-- </mat-form-field> -->
 
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
-          <input matInput formControlName="ageRestrictionTo" />
-          <!-- <mat-label>To</mat-label>
+          <input matInput formControlName="ageRestrictionTo" /> -->
+        <!-- <mat-label>To</mat-label>
           <mat-select
             formControlName="ageRestrictionTo"
             [value]="eventToEdit.ageRestrictionTo"
@@ -313,7 +324,7 @@
               <ng-template [ngIf]="age === 200">No limit</ng-template>
             </mat-option>
           </mat-select> -->
-        </mat-form-field>
+        <!-- </mat-form-field> -->
       </div>
       <p class="title">Price</p>
 
@@ -401,36 +412,8 @@
           </p>
           <p class="tiny">
             <span class="bold"> Age:</span>
-            <ng-template
-              [ngIf]="
-                !(
-                  event.ageRestrictionFrom === 200 ||
-                  (event.ageRestrictionFrom === 0 &&
-                    event.ageRestrictionTo === 200)
-                )
-              "
-            >
-              {{
-                event.ageRestrictionFrom === 200
-                  ? "&#8734;"
-                  : event.ageRestrictionFrom
-              }}
-              -
-              {{
-                event.ageRestrictionTo === 200
-                  ? "&#8734;"
-                  : event.ageRestrictionTo
-              }}
-            </ng-template>
-            <ng-template
-              [ngIf]="
-                event.ageRestrictionFrom === 200 ||
-                (event.ageRestrictionFrom === 0 &&
-                  event.ageRestrictionTo === 200)
-              "
-            >
-              Без ограничений
-            </ng-template>
+
+            {{ event.ageRestriction }}
           </p>
           <p class="tiny">
             <span class="bold">Price:</span>
