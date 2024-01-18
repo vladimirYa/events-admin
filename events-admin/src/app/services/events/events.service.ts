@@ -19,8 +19,8 @@ export interface IEvent {
   place: string;
   googleMapsLink: string;
   type: string;
-  // ageRestrictionFrom: number;
-  // ageRestrictionTo: number;
+  ageRestrictionFrom: number;
+  ageRestrictionTo: number;
   ageRestriction: string;
   priceFrom: number;
   priceTo: number;
@@ -43,8 +43,8 @@ export interface EventPayload {
   place: string;
   googleMapsLink: string;
   type: string;
-  // ageRestrictionFrom: string;
-  // ageRestrictionTo: string;
+  ageRestrictionFrom: number;
+  ageRestrictionTo: number;
   ageRestriction: string;
   priceFrom: number;
   priceTo: number;

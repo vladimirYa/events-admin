@@ -283,7 +283,7 @@
       </div>
       <p class="title">Age</p>
       <div class="multi">
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-select
             formControlName="ageRestriction"
             [value]="eventToEdit.ageRestriction"
@@ -292,11 +292,11 @@
               {{ age.label }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
-        <!-- <mat-form-field appearance="outline">
+        </mat-form-field> -->
+        <mat-form-field appearance="outline">
           <mat-label>From</mat-label>
-          <input matInput formControlName="ageRestrictionFrom" /> -->
-
+          <input matInput formControlName="ageRestrictionFrom" />
+        </mat-form-field>
         <!-- <mat-label>From</mat-label>
           <mat-select
             formControlName="ageRestrictionFrom"
@@ -311,9 +311,10 @@
           </mat-select> -->
         <!-- </mat-form-field> -->
 
-        <!-- <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
-          <input matInput formControlName="ageRestrictionTo" /> -->
+          <input matInput formControlName="ageRestrictionTo" />
+        </mat-form-field>
         <!-- <mat-label>To</mat-label>
           <mat-select
             formControlName="ageRestrictionTo"
@@ -413,7 +414,7 @@
           <p class="tiny">
             <span class="bold"> Age:</span>
 
-            {{ event.ageRestriction }}
+            {{ event.ageRestrictionFrom }} - {{ event.ageRestrictionTo }}
           </p>
           <p class="tiny">
             <span class="bold">Price:</span>

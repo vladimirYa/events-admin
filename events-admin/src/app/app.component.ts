@@ -119,9 +119,9 @@ export class AppComponent implements OnInit {
       originUrl: new FormControl(''),
       startTime: new FormControl('', { validators: Validators.required }),
       endTime: new FormControl(''),
-      // ageRestrictionFrom: new FormControl(''),
-      // ageRestrictionTo: new FormControl(''),
-      ageRestriction: new FormControl(Age.ANY),
+      ageRestrictionFrom: new FormControl(null),
+      ageRestrictionTo: new FormControl(null),
+      ageRestriction: new FormControl(Age._UNKNOWN),
       priceFrom: new FormControl(null),
       priceTo: new FormControl(null),
       description: new FormControl(''),
@@ -183,12 +183,12 @@ export class AppComponent implements OnInit {
     // this.ageFromChangeHandle({
     //   value: event.ageRestrictionFrom,
     // } as MatSelectChange);
-    // this.createEventForm
-    //   .get('ageRestrictionFrom')
-    //   ?.setValue(event.ageRestrictionFrom);
-    // this.createEventForm
-    //   .get('ageRestrictionTo')
-    //   ?.setValue(event.ageRestrictionTo);
+    this.createEventForm
+      .get('ageRestrictionFrom')
+      ?.setValue(event.ageRestrictionFrom);
+    this.createEventForm
+      .get('ageRestrictionTo')
+      ?.setValue(event.ageRestrictionTo);
     this.createEventForm.get('ageRestriction')?.setValue(event.ageRestriction);
     this.createEventForm.get('startDate')?.setValue(new Date(event.startDate));
     this.createEventForm.get('endDate')?.setValue(new Date(event.endDate));
@@ -270,6 +270,8 @@ export class AppComponent implements OnInit {
       googleMapsLink: value.googleMapsLink,
       type: value.type,
       ageRestriction: value.ageRestriction,
+      ageRestrictionFrom: +value.ageRestrictionFrom,
+      ageRestrictionTo: +value.ageRestrictionTo,
       priceFrom: value.priceFrom,
       priceTo: value.priceTo,
       addressAlias: value.addressAlias,
@@ -300,6 +302,20 @@ export class AppComponent implements OnInit {
     if (payload.hasPrice) {
       payload.priceFrom = +payload.priceFrom;
       payload.priceTo = +payload.priceTo;
+    }
+
+    if (payload.ageRestrictionFrom < 18 && payload.ageRestrictionTo < 18) {
+      payload.ageRestriction = Age.UNDER_18;
+    } else if (
+      payload.ageRestrictionFrom === 18 &&
+      payload.ageRestrictionTo === 200
+    ) {
+      payload.ageRestriction = Age.ABOVE_18;
+    } else if (
+      payload.ageRestrictionFrom < 18 &&
+      payload.ageRestrictionTo === 200
+    ) {
+      payload.ageRestriction = Age.FAMILY;
     }
 
     return payload;
