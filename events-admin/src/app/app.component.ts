@@ -304,7 +304,11 @@ export class AppComponent implements OnInit {
       payload.priceTo = +payload.priceTo;
     }
 
-    if (payload.ageRestrictionFrom < 18 && payload.ageRestrictionTo < 18) {
+    if (
+      payload.ageRestrictionFrom < 18 &&
+      payload.ageRestrictionTo < 18 &&
+      payload.ageRestrictionTo !== 0
+    ) {
       payload.ageRestriction = Age.UNDER_18;
     } else if (
       payload.ageRestrictionFrom === 18 &&
@@ -316,8 +320,12 @@ export class AppComponent implements OnInit {
       payload.ageRestrictionTo === 200
     ) {
       payload.ageRestriction = Age.FAMILY;
+    } else if (
+      payload.ageRestrictionFrom === 0 &&
+      payload.ageRestrictionTo === 0
+    ) {
+      payload.ageRestriction = Age._UNKNOWN;
     }
-
     return payload;
   }
   createOrganization(value: any) {
