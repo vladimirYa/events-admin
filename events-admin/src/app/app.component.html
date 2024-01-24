@@ -6,7 +6,7 @@
 >
   Show Organizations
 </button>
-<div class="dashboard">
+<div class="dashboard" *ngIf="config">
   <div class="dashboard__left" *ngIf="isShowOrgs">
     <div class="dashboard__header">
       <h1>Create Organization</h1>
@@ -123,10 +123,7 @@
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
         <mat-select formControlName="city">
-          <mat-option
-            *ngFor="let region of config.region.values"
-            [value]="region"
-          >
+          <mat-option *ngFor="let region of allCitites" [value]="region">
             {{ region }}
           </mat-option>
         </mat-select>

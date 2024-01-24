@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
   isCreating: boolean = false;
   eventFormtas: { [key: string]: Array<any> } = {};
   eventToEdit: IEvent = {} as IEvent;
+  allCitites: string[] = [];
   ageValues: any[] = [
     {
       label: 'Любой возраст',
@@ -104,6 +105,11 @@ export class AppComponent implements OnInit {
           this.eventFormtas[eventFormat.category].push(eventFormat.label);
         }
       });
+
+      this.allCitites = [
+        ...config.cities.values.coast,
+        ...config.cities.values.common,
+      ];
     });
 
     this.getOrganizations();
