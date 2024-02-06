@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   config: any;
   events: IEvent[] = [];
   eventsToShow: IEvent[] = [];
+  organizationsToShow: Organization[] = [];
   organizations: Organization[] = [];
   isShowOrgs: boolean = false;
   searchForm!: FormGroup;
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
   eventFormtas: { [key: string]: Array<any> } = {};
   eventToEdit: IEvent = {} as IEvent;
   allCitites: string[] = [];
+  searchByOrg!: FormGroup;
   ageValues: any[] = [
     {
       label: 'Любой возраст',
@@ -66,6 +68,20 @@ export class AppComponent implements OnInit {
     public orgsService: OrganizationsService
   ) {
     this.initForm();
+    this.searchByOrg = new FormGroup({
+      org_name: new FormControl(''),
+    });
+    this.searchByOrg.valueChanges.subscribe((v) => {
+      if (v.org_name) {
+        this.organizationsToShow = this.organizations.filter(
+          (org: Organization) => {
+            return org.name
+              .toLocaleLowerCase()
+              .includes(v.org_name.toLocaleLowerCase());
+          }
+        );
+      }
+    });
   }
 
   getAllEvents() {
@@ -79,6 +95,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getOrganizations();
     this.getAllEvents();
     this.searchForm = new FormGroup({
       search: new FormControl(''),
@@ -111,8 +128,6 @@ export class AppComponent implements OnInit {
         ...config.cities.values.common,
       ];
     });
-
-    this.getOrganizations();
   }
   initEventForm() {
     this.createEventForm = new FormGroup({
@@ -347,6 +362,7 @@ export class AppComponent implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         this.organizations = res;
+        this.organizationsToShow = res;
       });
   }
 

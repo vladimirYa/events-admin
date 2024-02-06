@@ -36,10 +36,15 @@
         </button>
       </div>
       <h3 class="orgs-header">Existing organizations</h3>
-
+      <div [formGroup]="searchByOrg">
+        <mat-form-field appearance="outline" class="search">
+          <mat-label>Search by organization</mat-label>
+          <input matInput formControlName="org_name" />
+        </mat-form-field>
+      </div>
       <div class="orgs">
-        <ng-template [ngIf]="organizations.length">
-          <div class="org" *ngFor="let orgData of organizations">
+        <ng-template [ngIf]="organizationsToShow.length">
+          <div class="org" *ngFor="let orgData of organizationsToShow">
             <div class="org__data">
               <div class="org__name">{{ orgData.name }}</div>
               <div class="org__contact">{{ orgData.contacts }}</div>
@@ -61,8 +66,8 @@
             </button>
           </div>
         </ng-template>
-        <ng-template [ngIf]="!organizations.length">
-          No organizations exists
+        <ng-template [ngIf]="!organizationsToShow.length">
+          No organizations
         </ng-template>
       </div>
     </div>
